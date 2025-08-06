@@ -44,6 +44,7 @@ export interface RewardsChartPoint {
   date: string;
   cumulativeRewards: number;
   amount: number;
+  fullDate?: string;
 }
 
 // Processed rewards data
@@ -144,13 +145,15 @@ export async function checkRewards(address: string): Promise<RewardsData> {
     
     for (const tx of allRewardTransactions) {
       cumulativeAmount += tx['asset-transfer-transaction']!.amount;
+      const txDate = new Date(tx['round-time'] * 1000);
       chartData.push({
-        date: new Date(tx['round-time'] * 1000).toLocaleDateString('en-US', { 
+        date: txDate.toLocaleDateString('en-US', { 
           month: 'short', 
           day: 'numeric' 
         }),
         cumulativeRewards: cumulativeAmount / 1000000, // Convert to USDC
-        amount: tx['asset-transfer-transaction']!.amount / 1000000
+        amount: tx['asset-transfer-transaction']!.amount / 1000000,
+        fullDate: txDate.toISOString().split('T')[0] // Store ISO date for filtering
       });
     }
 

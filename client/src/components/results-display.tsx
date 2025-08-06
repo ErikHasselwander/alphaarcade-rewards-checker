@@ -82,9 +82,7 @@ export function ResultsDisplay({ results, error, isLoading }: ResultsDisplayProp
           <TrendingUp className="w-5 h-5 text-blue-600" />
           <h3 className="text-lg font-semibold text-gray-900">Cumulative Rewards Over Time</h3>
         </div>
-        <div className="flex justify-center">
-          <RewardsChart data={results.chartData} />
-        </div>
+        <RewardsChart data={results.chartData} />
         {results.chartData.length > 0 && (
           <div className="mt-4 text-sm text-gray-600 text-center">
             Showing {results.chartData.length} reward transactions from {results.chartData[0]?.date} to {results.chartData[results.chartData.length - 1]?.date}

@@ -1,4 +1,8 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useState, useMemo } from 'react';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import type { RewardsChartPoint } from '@/lib/algorand';
 
 interface RewardsChartProps {
@@ -6,6 +10,17 @@ interface RewardsChartProps {
 }
 
 export function RewardsChart({ data }: RewardsChartProps) {
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  // Initialize date range with full data range
+  useMemo(() => {
+    if (data.length > 0) {
+      setStartDate(data[0].fullDate || '');
+      setEndDate(data[data.length - 1].fullDate || '');
+    }
+  }, [data]);
+
   if (data.length === 0) {
     return (
       <div className="h-64 flex items-center justify-center text-gray-500">
@@ -13,6 +28,23 @@ export function RewardsChart({ data }: RewardsChartProps) {
       </div>
     );
   }
+
+  // Filter data based on selected date range
+  const filteredData = useMemo(() => {
+    if (!startDate || !endDate) return data;
+    
+    return data.filter(point => {
+      if (!point.fullDate) return true;
+      return point.fullDate >= startDate && point.fullDate <= endDate;
+    });
+  }, [data, startDate, endDate]);
+
+  const resetDateRange = () => {
+    if (data.length > 0) {
+      setStartDate(data[0].fullDate || '');
+      setEndDate(data[data.length - 1].fullDate || '');
+    }
+  };
 
   // Custom tooltip to show reward details
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -34,47 +66,101 @@ export function RewardsChart({ data }: RewardsChartProps) {
   };
 
   return (
-    <div className="h-80 w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={data}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 40,
-            bottom: 70,
-          }}
-        >
+    <div className="w-full max-w-4xl mx-auto">
+      {/* Date Range Selector */}
+      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+        <div className="flex flex-wrap items-end gap-4">
+          <div className="flex-1 min-w-32">
+            <Label htmlFor="start-date" className="text-sm font-medium text-gray-700">
+              Start Date
+            </Label>
+            <Input
+              id="start-date"
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="mt-1"
+            />
+          </div>
+          <div className="flex-1 min-w-32">
+            <Label htmlFor="end-date" className="text-sm font-medium text-gray-700">
+              End Date
+            </Label>
+            <Input
+              id="end-date"
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="mt-1"
+            />
+          </div>
+          <Button
+            onClick={resetDateRange}
+            variant="outline"
+            className="text-sm"
+          >
+            Reset to Full Range
+          </Button>
+        </div>
+      </div>
 
-          <XAxis 
-            dataKey="date" 
-            stroke="#666"
-            fontSize={12}
-            tick={{ fontSize: 11 }}
-            angle={-45}
-            textAnchor="end"
-            height={60}
-            interval={Math.max(0, Math.floor(data.length / 8))}
-          />
-          <YAxis 
-            stroke="#666"
-            fontSize={12}
-            tick={{ fontSize: 11 }}
-            tickFormatter={(value) => `$${value.toFixed(0)}`}
-            domain={['dataMin', 'dataMax']}
-            allowDataOverflow={false}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Line 
-            type="monotone" 
-            dataKey="cumulativeRewards" 
-            stroke="#3b82f6" 
-            strokeWidth={3}
-            dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-            activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      {/* Chart */}
+      <div className="h-80 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart
+            data={filteredData}
+            margin={{
+              top: 20,
+              right: 30,
+              left: 40,
+              bottom: 70,
+            }}
+          >
+            <XAxis 
+              dataKey="date" 
+              stroke="#666"
+              fontSize={12}
+              tick={{ fontSize: 11 }}
+              angle={-45}
+              textAnchor="end"
+              height={60}
+              interval={Math.max(0, Math.floor(filteredData.length / 8))}
+            />
+            <YAxis 
+              stroke="#666"
+              fontSize={12}
+              tick={{ fontSize: 11 }}
+              tickFormatter={(value) => `$${value.toFixed(0)}`}
+              domain={['dataMin', 'dataMax']}
+              allowDataOverflow={false}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Line 
+              type="monotone" 
+              dataKey="cumulativeRewards" 
+              stroke="#3b82f6" 
+              strokeWidth={3}
+              dot={false}
+              activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      
+      {/* Powered by Nodely.io */}
+      <div className="mt-4 text-center">
+        <p className="text-sm text-gray-500">
+          Powered by{' '}
+          <a 
+            href="https://nodely.io" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800 underline"
+          >
+            Nodely.io
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
