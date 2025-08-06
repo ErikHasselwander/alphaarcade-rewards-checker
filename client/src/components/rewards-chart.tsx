@@ -45,7 +45,7 @@ export function RewardsChart({ data }: RewardsChartProps) {
             bottom: 70,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+
           <XAxis 
             dataKey="date" 
             stroke="#666"
