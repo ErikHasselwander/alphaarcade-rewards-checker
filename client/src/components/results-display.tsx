@@ -1,6 +1,7 @@
-import { CheckCircle, AlertCircle, FileText } from "lucide-react";
+import { CheckCircle, AlertCircle, FileText, TrendingUp } from "lucide-react";
 import { formatUSDC } from "@/lib/algorand";
-import type { RewardsData, AlgorandTransaction } from "@/lib/algorand";
+import { RewardsChart } from "@/components/rewards-chart";
+import type { RewardsData } from "@/lib/algorand";
 
 interface ResultsDisplayProps {
   results?: RewardsData | null;
@@ -48,13 +49,6 @@ export function ResultsDisplay({ results, error, isLoading }: ResultsDisplayProp
   if (!results) return null;
 
   const totalRewards = formatUSDC(results.totalAmount);
-  const recentTransactions = results.transactions
-    .slice(0, 10)
-    .map(tx => ({
-      amount: formatUSDC(tx['asset-transfer-transaction']!['amount']),
-      date: new Date(tx['round-time'] * 1000).toLocaleString(),
-      round: tx['confirmed-round']
-    }));
 
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
@@ -82,28 +76,20 @@ export function ResultsDisplay({ results, error, isLoading }: ResultsDisplayProp
         </div>
       </div>
 
-      {/* Transaction Details */}
+      {/* Cumulative Rewards Chart */}
       <div className="border-t border-gray-200 pt-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Transactions</h3>
-        <div className="space-y-3 max-h-64 overflow-y-auto">
-          {recentTransactions.map((tx, index) => (
-            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex-1">
-                <div className="text-sm font-medium text-gray-900">
-                  {tx.amount} USDC
-                </div>
-                <div className="text-xs text-gray-500 font-mono">
-                  {tx.date}
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-xs text-gray-500">
-                  Round: {tx.round.toLocaleString()}
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="flex items-center gap-2 mb-4">
+          <TrendingUp className="w-5 h-5 text-blue-600" />
+          <h3 className="text-lg font-semibold text-gray-900">Cumulative Rewards Over Time</h3>
         </div>
+        <div className="bg-gray-50 rounded-lg p-4">
+          <RewardsChart data={results.chartData} />
+        </div>
+        {results.chartData.length > 0 && (
+          <div className="mt-4 text-sm text-gray-600 text-center">
+            Showing {results.chartData.length} reward transactions from {results.chartData[0]?.date} to {results.chartData[results.chartData.length - 1]?.date}
+          </div>
+        )}
       </div>
     </div>
   );

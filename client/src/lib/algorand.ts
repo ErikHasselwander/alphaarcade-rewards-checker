@@ -39,11 +39,19 @@ export interface TransactionResponse {
   'current-round': number;
 }
 
+// Chart data point for cumulative rewards
+export interface RewardsChartPoint {
+  date: string;
+  cumulativeRewards: number;
+  amount: number;
+}
+
 // Processed rewards data
 export interface RewardsData {
   totalAmount: number;
   transactions: AlgorandTransaction[];
   count: number;
+  chartData: RewardsChartPoint[];
 }
 
 // Fetch transactions from Algorand Indexer
@@ -128,10 +136,26 @@ export async function checkRewards(address: string): Promise<RewardsData> {
       nextToken = data['next-token'];
     } while (nextToken);
 
+    // Sort transactions by date and create cumulative chart data
+    allRewardTransactions.sort((a, b) => a['round-time'] - b['round-time']);
+    
+    const chartData: RewardsChartPoint[] = [];
+    let cumulativeAmount = 0;
+    
+    for (const tx of allRewardTransactions) {
+      cumulativeAmount += tx['asset-transfer-transaction']!.amount;
+      chartData.push({
+        date: new Date(tx['round-time'] * 1000).toLocaleDateString(),
+        cumulativeRewards: cumulativeAmount / 1000000, // Convert to USDC
+        amount: tx['asset-transfer-transaction']!.amount / 1000000
+      });
+    }
+
     return {
       totalAmount,
       transactions: allRewardTransactions,
-      count: allRewardTransactions.length
+      count: allRewardTransactions.length,
+      chartData
     };
   } catch (error) {
     console.error('Error fetching rewards:', error);
