@@ -8,10 +8,15 @@ This application is now configured for seamless deployment on Vercel as a static
 
 1. **Connect Repository**: Import your repository to Vercel
 2. **Configure Build Settings**:
-   - **Build Command**: `npm run build`
+   - **Build Command**: `vite build`
    - **Output Directory**: `dist/public`
    - **Install Command**: `npm install` (default)
 3. **Deploy**: Click deploy
+
+### Alternative Build Commands
+- **Option 1**: `vite build` (recommended - frontend only)
+- **Option 2**: `node build-vercel.js` (uses included script)
+- **Note**: Do not use `npm run build` as it tries to build the server too
 
 ### Configuration Files
 

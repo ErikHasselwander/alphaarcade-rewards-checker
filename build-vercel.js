@@ -1,26 +1,30 @@
 #!/usr/bin/env node
 
-// Simple build script for Vercel deployment
-// This copies the built files to the correct location for Vercel
+// Frontend-only build script for Vercel deployment
+// Runs only the Vite build without server compilation
 
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { copyFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 
 const execAsync = promisify(exec);
 
 async function main() {
   try {
-    console.log('Building React app...');
+    console.log('Building React app for Vercel deployment...');
+    
+    // Only run vite build, skip the server build
     await execAsync('vite build');
     
-    console.log('Build completed successfully!');
+    console.log('Frontend build completed successfully!');
     
-    // Vercel expects the output in dist/ directory
+    // Check if build output exists
     if (existsSync('dist/public')) {
-      console.log('Build output is ready for Vercel deployment');
-      console.log('Output directory: dist/public');
+      console.log('✓ Build output ready at: dist/public');
+      console.log('✓ Ready for Vercel deployment');
+    } else {
+      console.error('Build output not found at expected location');
+      process.exit(1);
     }
   } catch (error) {
     console.error('Build failed:', error);

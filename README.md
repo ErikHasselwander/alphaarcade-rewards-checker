@@ -16,10 +16,12 @@ A React-based web application for checking USDC rewards received from the ALPHA 
 
 1. Connect your repository to Vercel
 2. Configure build settings:
-   - **Build Command**: `npm run build`
+   - **Build Command**: `vite build`
    - **Output Directory**: `dist/public`
    - **Install Command**: `npm install`
 3. Deploy
+
+**Alternative Build Command**: `node build-vercel.js` (uses the included build script)
 
 The app is configured as a Single Page Application (SPA) with client-side routing. The `vercel.json` configuration handles routing for direct URL access to specific addresses.
 
