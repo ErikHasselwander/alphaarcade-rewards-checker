@@ -1,7 +1,7 @@
 // Algorand API constants
 export const ALPHA_REWARDS_WALLET = 'XUIBTKHE7ISNMCLJWXUOOK6X3OCP3GVV3Z4J33PHMYX6XXK3XWN3KDMMNI';
 export const USDC_ASSET_ID = 31566704;
-export const API_BASE_URL = 'https://mainnet-idx.4160.nodely.dev/v2/accounts';
+export const API_BASE_URL = 'https://mainnet-idx.4160.nodely.dev/v2/transactions';
 
 // Validate Algorand address format
 export function isValidAlgorandAddress(address: string): boolean {
