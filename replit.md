@@ -13,10 +13,11 @@ Preferred communication style: Simple, everyday language.
 ### Frontend Architecture
 - **React 18** with TypeScript for the user interface
 - **Vite** as the build tool and development server for fast hot module replacement
-- **Wouter** for client-side routing (lightweight React router alternative)
+- **Wouter** for client-side routing with URL parameter support for direct address checking
 - **TanStack Query** for API state management and caching
 - **Tailwind CSS** with **shadcn/ui** component library for styling and UI components
 - **Radix UI** primitives for accessible, unstyled components
+- **Recharts** for interactive cumulative rewards visualization
 
 ### Backend Architecture
 - **Express.js** server with TypeScript for API handling
@@ -51,3 +52,7 @@ Preferred communication style: Simple, everyday language.
 **Responsive Design**: Mobile-first approach with Tailwind CSS ensures optimal user experience across all device sizes.
 
 **State Management**: TanStack Query handles API caching and loading states, providing a smooth user experience with automatic background refetching.
+
+**URL Routing**: Direct address checking via URL parameters (e.g., `/CHMP44CAUGU7DUKKTWA65MTR6CJDHQRWDYODHA2CJ4XMOWEBFGXKPJXH7Q`) for easy sharing and bookmarking of specific wallet results.
+
+**Interactive Visualization**: Date-filterable cumulative rewards chart with clean line visualization, hover tooltips, and responsive design for tracking reward accumulation over time.

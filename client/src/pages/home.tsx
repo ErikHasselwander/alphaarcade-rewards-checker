@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useParams } from "wouter";
 import { AddressInput } from "@/components/address-input";
 import { ResultsDisplay } from "@/components/results-display";
-import { checkRewards } from "@/lib/algorand";
+import { checkRewards, isValidAlgorandAddress } from "@/lib/algorand";
 import type { RewardsData } from "@/lib/algorand";
 
 export default function Home() {
   const [results, setResults] = useState<RewardsData | null>(null);
+  const params = useParams();
 
   const checkRewardsMutation = useMutation({
     mutationFn: checkRewards,
@@ -17,6 +19,14 @@ export default function Home() {
       setResults(null);
     }
   });
+
+  // Auto-check rewards if valid address is in URL
+  useEffect(() => {
+    const addressFromUrl = params.address;
+    if (addressFromUrl && isValidAlgorandAddress(addressFromUrl)) {
+      checkRewardsMutation.mutate(addressFromUrl);
+    }
+  }, [params.address]);
 
   const handleCheckRewards = (address: string) => {
     checkRewardsMutation.mutate(address);
@@ -39,6 +49,7 @@ export default function Home() {
         <AddressInput 
           onCheckRewards={handleCheckRewards}
           isLoading={checkRewardsMutation.isPending}
+          initialAddress={params.address || ''}
         />
 
         {/* Results Section */}

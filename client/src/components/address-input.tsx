@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,10 +8,16 @@ import { isValidAlgorandAddress } from "@/lib/algorand";
 interface AddressInputProps {
   onCheckRewards: (address: string) => void;
   isLoading: boolean;
+  initialAddress?: string;
 }
 
-export function AddressInput({ onCheckRewards, isLoading }: AddressInputProps) {
-  const [address, setAddress] = useState("");
+export function AddressInput({ onCheckRewards, isLoading, initialAddress = "" }: AddressInputProps) {
+  const [address, setAddress] = useState(initialAddress);
+
+  // Update address when initialAddress changes
+  useEffect(() => {
+    setAddress(initialAddress);
+  }, [initialAddress]);
   const [addressError, setAddressError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
