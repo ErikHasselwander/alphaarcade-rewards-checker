@@ -145,7 +145,10 @@ export async function checkRewards(address: string): Promise<RewardsData> {
     for (const tx of allRewardTransactions) {
       cumulativeAmount += tx['asset-transfer-transaction']!.amount;
       chartData.push({
-        date: new Date(tx['round-time'] * 1000).toLocaleDateString(),
+        date: new Date(tx['round-time'] * 1000).toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric' 
+        }),
         cumulativeRewards: cumulativeAmount / 1000000, // Convert to USDC
         amount: tx['asset-transfer-transaction']!.amount / 1000000
       });

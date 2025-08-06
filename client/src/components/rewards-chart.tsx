@@ -34,15 +34,15 @@ export function RewardsChart({ data }: RewardsChartProps) {
   };
 
   return (
-    <div className="h-64 w-full">
+    <div className="h-80 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
           margin={{
-            top: 5,
+            top: 20,
             right: 30,
-            left: 20,
-            bottom: 5,
+            left: 40,
+            bottom: 70,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -51,12 +51,18 @@ export function RewardsChart({ data }: RewardsChartProps) {
             stroke="#666"
             fontSize={12}
             tick={{ fontSize: 11 }}
+            angle={-45}
+            textAnchor="end"
+            height={60}
+            interval={Math.max(0, Math.floor(data.length / 8))}
           />
           <YAxis 
             stroke="#666"
             fontSize={12}
             tick={{ fontSize: 11 }}
-            tickFormatter={(value) => `${value} USDC`}
+            tickFormatter={(value) => `$${value.toFixed(0)}`}
+            domain={['dataMin', 'dataMax']}
+            allowDataOverflow={false}
           />
           <Tooltip content={<CustomTooltip />} />
           <Line 
