@@ -31,7 +31,7 @@ export function ResultsDisplay({ results, error, isLoading }: ResultsDisplayProp
     return null; // No results to display yet
   }
 
-  if (results.count === 0) {
+  if (results && results.count === 0) {
     return (
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
@@ -45,11 +45,13 @@ export function ResultsDisplay({ results, error, isLoading }: ResultsDisplayProp
     );
   }
 
+  if (!results) return null;
+
   const totalRewards = formatUSDC(results.totalAmount);
   const recentTransactions = results.transactions
     .slice(0, 10)
     .map(tx => ({
-      amount: formatUSDC(tx['asset-transfer-transaction']['amount']),
+      amount: formatUSDC(tx['asset-transfer-transaction']!['amount']),
       date: new Date(tx['round-time'] * 1000).toLocaleString(),
       round: tx['confirmed-round']
     }));
@@ -75,7 +77,7 @@ export function ResultsDisplay({ results, error, isLoading }: ResultsDisplayProp
         <div className="bg-gray-100 rounded-lg p-6">
           <div className="text-sm font-medium text-gray-600 mb-1">Total Transactions</div>
           <div className="text-3xl font-bold text-gray-900">
-            {results.count}
+            {results?.count}
           </div>
         </div>
       </div>
