@@ -4,6 +4,8 @@
 
 This is a React-based web application that checks USDC rewards received from the ALPHA rewards program on the Algorand blockchain. Users can input an Algorand wallet address to view their total rewards and transaction history. The application queries the Algorand Indexer API to fetch transaction data and displays it in a clean, user-friendly interface.
 
+**Deployment Status**: Restructured for Vercel deployment as a static SPA with client-side routing support.
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -25,16 +27,11 @@ Preferred communication style: Simple, everyday language.
 - **In-memory storage** implementation with interface for future database integration
 - **RESTful API** design with `/api` prefix for all backend routes
 
-### Data Storage Solutions
-- **Drizzle ORM** configured for PostgreSQL with schema definition
-- **Neon Database** serverless PostgreSQL for production
-- **Session management** with `connect-pg-simple` for PostgreSQL session storage
-- **Memory storage** fallback for development/testing
-
-### Authentication and Authorization
-- Basic user schema with username/password fields
-- Session-based authentication infrastructure ready for implementation
-- Zod validation schemas for type-safe data validation
+### Deployment Configuration
+- **Vercel-ready**: Configured for static deployment with SPA routing
+- **Client-side only**: No backend required - direct API integration
+- **Build output**: `dist/public` directory for Vercel deployment
+- **Routing support**: `vercel.json` handles client-side routing for direct address URLs
 
 ### External Service Integrations
 - **Algorand Indexer API** (nodely.io) for blockchain transaction queries
@@ -56,3 +53,5 @@ Preferred communication style: Simple, everyday language.
 **URL Routing**: Direct address checking via URL parameters (e.g., `/CHMP44CAUGU7DUKKTWA65MTR6CJDHQRWDYODHA2CJ4XMOWEBFGXKPJXH7Q`) for easy sharing and bookmarking of specific wallet results.
 
 **Interactive Visualization**: Date-filterable cumulative rewards chart with clean line visualization, hover tooltips, and responsive design for tracking reward accumulation over time.
+
+**Static Deployment**: Restructured as a client-side-only application for easy deployment on Vercel, Netlify, or similar static hosting platforms.
